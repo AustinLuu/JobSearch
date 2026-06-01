@@ -1,0 +1,7 @@
+# transient run artifacts (plan + raw Apify results + outputs per invocation)
+.fetch-runs/
+# python bytecode
+__pycache__/
+*.pyc
+# throwaway build-time verification copies
+scripts/pr_verify*.py

@@ -62,7 +62,7 @@
     "salary_normalization": { "hourly_to_annual_multiplier": 2080 },
     "max_per_employer": 3,
     "exclude_companies": [],
-    "actor_location_format": { "...": "unchanged" },
+    "actor_location_format": {},
     "actor_enforcement": {
       "fantastic-jobs/advanced-linkedin-job-search-api": {
         "native": ["titles", "title_exclude", "locations", "job_type", "workplace_type"],

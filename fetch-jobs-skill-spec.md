@@ -169,14 +169,15 @@ Stored at `~/Documents/JobSearch/search_config.json`. Live schema:
 
 Field notes:
 - **`countries`** is an array of ISO-2 codes (`["CA", "US"]`). The skill iterates locations directly (see per-location fetch below); `countries` is used to derive each Actor's `country` parameter from the location being fetched, and as a sanity bound on post-fetch location checks.
-- **`locations`** holds `"City, Region"` strings (e.g. `"Toronto, ON"`, `"New York, NY"`). These are canonical; each Actor needs its own format (LinkedIn wants `"City, Region-full-name, Country"`, etc.), so they're translated per-Actor at call time via `actor_location_format` overrides + the documented format rules. `locations: []` (empty) means "don't constrain by city, only by country." **Glassdoor requires a non-empty `location`**, so an empty `locations` must fall back to a country-derived location string (`country_to_location`).
+- **`locations`** holds `"City, Region"` strings (e.g. `"Toronto, ON"`, `"New York, NY"`). These are canonical; each Actor needs its own format (LinkedIn wants `"City, Region-full-name, Country"`, etc.), so they're translated per-Actor at call time via `actor_location_format` overrides + the format rules in *Field & location translation (definitions)* above. `locations: []` (empty) means "don't constrain by city, only by country." **Glassdoor requires a non-empty `location`**, so an empty `locations` must fall back to a country-derived location string (`country_to_location`).
 - **`title_exclude`** is the canonical exclusion list, enforced per the matrix (LinkedIn native — *list every variant incl. abbreviation + spelled-out form*; Indeed/Glassdoor post-fetch).
 - **`workplace_type`** is always explicit. Native-mapping is uneven (LinkedIn partial/BETA + separates hybrid/on-site; Indeed partial; Glassdoor none) — see the table.
-- **`min_salary`** is a single number, interpreted in the **role's own geographic currency, with no FX** (a US role's salary compared as USD; a CA role's as CAD — both against the same number). **`salary_match_field`** selects which end of a stated range to test (`"max"` = compare the range's upper bound against the floor). **No board filters salary natively** → always post-fetch, combined with `salary_unknown_action` and `salary_normalization`.
+- **`min_salary`** is a single number, interpreted in the **role's own geographic currency, with no FX** (a US role's salary compared as USD; a CA role's as CAD — both against the same number). **`salary_match_field`** selects which end of a stated range to test (`"max"` = compare the range's upper bound against the floor). The listing's own salary is normalized to the object `{ min, max, currency, period }` (see *Normalize* and *Output schema*); the filter compares `salary[salary_match_field]` (already annualized) against `min_salary`. **No board filters salary natively** → always post-fetch, combined with `salary_unknown_action` and `salary_normalization`.
 - **`salary_normalization.hourly_to_annual_multiplier`** (2080) converts hourly comps to annual before comparison.
 - **`max_per_employer`** caps distinct listings per company; applied **after** dedup (see pseudocode).
 - **`exclude_companies`** is global (cross-search); enforced post-fetch on all boards.
 - **`actor_enforcement`** is the machine-readable mirror of the per-Actor matrix below: per-Actor `native` vs `post_fetch` field lists, plus `call_defaults` (e.g. Indeed `radius:"0"`), `limits`, and `notes`. The skill reads this to decide, per selected Actor, which filters to push to the call and which to enforce after fetch.
+- **`actor_location_format`** holds per-Actor location-string *overrides* only; the format *rules* live in *Field & location translation (definitions)*. It is currently `{}` (no overrides); populate it only for genuine per-Actor exceptions.
 
 ### 3. `seen_jobs.json`
 
@@ -200,7 +201,7 @@ The three recommended Actors and how canonical config fields map to each, **as v
 | **Experience level** | `seniorityFilter[]` tokens `Associate`/`Director`/`Executive`/`Mid-Senior level`/`Entry level`/`Not Applicable`/`Internship` (**case-sensitive, English-speaking countries only**); BETA `aiExperienceLevelFilter[]` year-bands `0-2`/`2-5`/`5-10`/`10+` | `level` enum `entry_level`/`mid_level`/`senior_level` — **US domain only** (`country:"us"`); else **PF** | **PF** (no field) |
 | **Salary floor** | **PF** (only `aiHasSalary` boolean = *has any salary*, not a floor — **leave unset** so unknown-salary rows survive) | **PF** (no salary field) | **PF** (`minRating` is a 0–5 *company rating*, not salary) |
 | **Result cap** | `limit` (integer; **min 10**, max 5000, default 10) | `maxRows` (integer, default 100) — **not** `maxItems` | `limit` (integer, default 100) |
-| **Source-side dedupe** | none usable (`excludeATSDuplicate` only applies alongside the Career Site Job Listing API Actor) | `enableUniqueJobs: true` (boolean) | `excludeJobIds[]` — push `seen_jobs.json` IDs here |
+| **Source-side dedupe** | none usable (`excludeATSDuplicate` only applies alongside the Career Site Job Listing API Actor) | `enableUniqueJobs: true` (boolean) | `excludeJobIds[]` — push the **raw Glassdoor IDs** extracted from `seen_jobs.json` via `raw_ids_for("gd", seen)` (strip the `gd_` prefix; the skill's prefixed `job_id`s won't match Glassdoor's native ID space) |
 | **Agency / job-board filtering** | native `removeAgency: true` (drops agencies/job boards at source) + per-record `linkedin_org_recruitment_agency_derived` bool for post-fetch handling. See Open questions for policy. | (no native field) | (no native field) |
 
 **Post-fetch enforcement is therefore mandatory for:** salary floor (all three boards), excluded companies (all three), title_exclude (Indeed; Glassdoor — LinkedIn native if all variants listed), title allow-list (Indeed + Glassdoor, to catch fuzzy/keyword leaks), workplace type (Glassdoor always; Indeed `on_site` and hybrid/on-site separation; LinkedIn if the BETA filter proves unreliable), job type (Glassdoor always), experience level (Glassdoor always; Indeed for any non-US country), and the date safety check (all three).
@@ -209,6 +210,41 @@ The three recommended Actors and how canonical config fields map to each, **as v
 - LinkedIn: `locationExclusionSearch[]`, `organizationExclusionSearch[]`, `descriptionType` (`text`/`html`/empty), `noDirectApply`/`directApply` (Easy-Apply filters).
 - Indeed: `radius` (enum km/mi — pin to `"0"` to stop metro spillover), `sort` (`relevance`/`date`), `includeSimilarJobs` (default true — set false to reduce noise).
 - Glassdoor: `easyApply` (bool), `minRating` (company-rating floor).
+
+---
+
+## Field & location translation (definitions)
+
+The pseudocode calls a set of translation helpers. They are defined here so the skill has a concrete, buildable substrate instead of prose. **Format *rules* live in this spec (stable logic); `actor_location_format` in `search_config.json` is for genuine per-Actor *overrides* only** — it is currently `{}` (no overrides), so every helper falls back to the rule below; populate it only for genuine per-Actor exceptions. Every helper that consults `actor_location_format` applies a matching override first, then falls back to the rule below.
+
+**Grounding maps** — cover the locations/countries in the current config; extend when new ones are added:
+
+| Canonical region | Full region name | Country (ISO-2) | Country full name |
+|---|---|---|---|
+| `ON` | Ontario | CA | Canada |
+| `BC` | British Columbia | CA | Canada |
+| `NY` | New York | US | United States |
+| `CA` | California | US | United States |
+| `NJ` | New Jersey | US | United States |
+
+Note the `CA` collision: as a **region** it is California (US); as a **country code** it is Canada. Locations are always `"City, Region"`, so a trailing `CA` in a location string is California, while `CA` in `entry.countries` is Canada. Helpers must read it positionally, never by bare string.
+
+- **`country_of(loc, countries)`** → ISO-2. Split `loc` on the last comma for the region abbrev; map region → country via the table; assert the result is in `entry.countries` (sanity bound). If `loc` is `COUNTRY_LEVEL`, it already carries its country.
+- **`COUNTRY_LEVEL`** — sentinel emitted (one per `entry.countries`) when `entry.locations` is empty. It carries its country; location helpers render it as the country-level string instead of a city.
+- **`li_location_string(loc, country)`** (LinkedIn `locationSearch` element) → `"City, <Full region>, <Full country>"`, English names, no geo IDs. `"Toronto, ON"` → `"Toronto, Ontario, Canada"`; `"New York, NY"` → `"New York, New York, United States"`. `COUNTRY_LEVEL` → `"<Full country>"`.
+- **`indeed_location_string(loc)`** (Indeed `location`) → `"City, <Region abbrev>"` (Indeed keeps country separate), e.g. `"Toronto, ON"`. `COUNTRY_LEVEL` → empty string (the `country` param alone scopes it). Pair with `radius:"0"`.
+- **`indeed_country_code(country)`** (Indeed `country`) → ISO-2 lowercased, with known exceptions (UK is `"uk"`, not `"gb"`). CA→`"ca"`, US→`"us"`.
+- **`glassdoor_location_string(loc)`** (Glassdoor `location`, required, non-empty) → `"City, <Region abbrev>"`, e.g. `"Toronto, ON"`. Country is embedded; Glassdoor has no separate country param.
+- **`country_to_location(country)`** — Glassdoor fallback when `loc` is `COUNTRY_LEVEL` (Glassdoor's `location` may not be empty). CA→`"Canada"`, US→`"United States"`.
+- **`translate_jobtype(jt, actor)`** — maps one job_type value. LinkedIn: `full-time`→`FULL_TIME`, `contract`→`CONTRACTOR`. Indeed: `full-time`→`fulltime`, `contract`→`contract`. LinkedIn receives the full mapped **array**; Indeed receives **one value per call** (see the Indeed loop in the pseudocode).
+- **`translate_workplace(workplace_type, actor)` / `workplace_to_indeed(...)`** — LinkedIn: `aiWorkArrangementFilter[]` tokens (`on_site`→`On-site`, `hybrid`→`Hybrid`, `remote`→ both `Remote OK`+`Remote Solely`), BETA. Indeed: `remote` enum — `remote`→`"remote"`, `hybrid`→`"hybrid"`, `on_site`→ unset (post-fetch). Glassdoor: none (post-fetch).
+- **`expand_variants(title_exclude)`** — returns the list unchanged. The live config already lists abbreviation **and** spelled-out forms by hand (`"VP"`, `"Vice President"`), so this is an identity pass today; it exists only as the seam where auto-expansion would live if that ownership ever moves out of the config. Do not maintain a second expansion table here while the config does it.
+
+### Identifiers (`job_id`)
+
+`job_id = "{source_prefix}_{raw_source_id}"`, where `source_prefix ∈ {li, in, gd}` (LinkedIn / Indeed / Glassdoor) and `raw_source_id` is the Actor's own listing ID. Both are kept on the normalized record: `job_id` is the cross-run / cross-board dedupe key and the human-facing handle; `raw_source_id` lets the skill address a single Actor in its own ID space.
+
+- **`raw_ids_for(prefix, seen)`** → `[strip_prefix(j) for j in seen if j.startswith(prefix + "_")]`. Used for Glassdoor's `excludeJobIds`, which expects *Glassdoor's native* IDs, not the skill's prefixed `job_id`s. Feeding raw (prefixed) `seen` to `excludeJobIds` silently matches nothing — this helper is the fix.
 
 ---
 
@@ -265,27 +301,29 @@ for each entry in entries:
                     limit                = max(10, CAP)                  # LinkedIn floor is 10
 
             else if actor == "borderline/indeed-scraper":
-                call actor with:
-                    query            = OR_join(entry.titles),            # verify OR is honored
-                    location         = indeed_location_string(loc),
-                    country          = indeed_country_code(country),     # note: "uk" not "gb"
-                    radius           = enforce.call_defaults.radius or "0",  # pin metro; stops spillover
-                    fromDays         = from_days_in,                     # STRING enum
-                    remote           = workplace_to_indeed(entry.workplace_type),  # "remote"|"hybrid"|unset
-                    jobType          = translate_jobtype(entry.job_type, actor),
-                    enableUniqueJobs = true,
-                    maxRows          = CAP                               # NOT maxItems
+                # Indeed accepts only ONE jobType per call -> loop over entry.job_type.
+                for each jt in entry.job_type:
+                    call actor with:
+                        query            = OR_join(entry.titles),            # verify OR is honored
+                        location         = indeed_location_string(loc),
+                        country          = indeed_country_code(country),     # note: "uk" not "gb"
+                        radius           = enforce.call_defaults.radius or "0",  # pin metro; stops spillover
+                        fromDays         = from_days_in,                     # STRING enum
+                        remote           = workplace_to_indeed(entry.workplace_type),  # "remote"|"hybrid"|unset
+                        jobType          = translate_jobtype(jt, actor),     # SINGLE value, not the array
+                        enableUniqueJobs = true,
+                        maxRows          = CAP                               # NOT maxItems
 
             else if actor == "valig/glassdoor-jobs-scraper":
                 call actor with:
                     keywords     = OR_join(entry.titles),                # required
                     location     = glassdoor_location_string(loc) or country_to_location(country),  # required, non-empty
                     daysOld      = days_old_gd,
-                    excludeJobIds = seen,
+                    excludeJobIds = raw_ids_for("gd", seen),             # native Glassdoor IDs only (strip gd_ prefix)
                     limit        = CAP
                     # no jobType / workplace / experience / salary / radius - all PF for Glassdoor
 
-            for each listing returned:
+            for each listing returned:        # from every call made above (Indeed: one result set per job_type)
                 listing.source_search_name = entry.name
                 listing.source_actor       = actor
                 results.append(listing)
@@ -293,11 +331,17 @@ for each entry in entries:
 # --- Normalize ---
 for each listing in results:
     normalize to: {
-        job_id, source, source_actor, company, title, location,
+        job_id, raw_source_id, source, source_actor, company, title, location,
         workplace_type, salary, is_agency, url,
         description, date_posted, source_search_name
     }
-    normalize salary to annual (hourly x config.global.salary_normalization.hourly_to_annual_multiplier)
+    # job_id      = "{source_prefix}_{raw_source_id}"  (prefixes: li_/in_/gd_); see Identifiers above.
+    # raw_source_id = the Actor's own listing ID (kept so we can talk back to one Actor in its ID space).
+    # salary      = OBJECT { min, max, currency, period }; any field null if not stated.
+    #               period ∈ {"annual","hourly"}; currency inferred from the role's country (CA->CAD, US->USD).
+    # If period == "hourly": convert min/max to annual
+    #   (× config.global.salary_normalization.hourly_to_annual_multiplier) and set period = "annual"
+    #   BEFORE the salary filter runs, so the floor is always compared annual-to-annual.
 
 # --- Post-fetch filtering: per listing, apply only what its source_actor lists under post_fetch ---
 # (actor_enforcement[r.source_actor].post_fetch decides which of these run for each listing)
@@ -306,7 +350,10 @@ results = apply_title_allowlist(results, entry.titles)                 # Indeed 
 results = apply_title_exclude(results, entry.title_exclude)            # Indeed + Glassdoor (LI native if variants listed)
 results = apply_salary_filter(results, entry.min_salary, entry.salary_match_field, config.global.salary_unknown_action)
                                                                       # ALL boards; compare r.salary[salary_match_field]
-                                                                      # in the role's OWN currency (no FX); unknown->include
+                                                                      # (already annual after normalize) against min_salary
+                                                                      # in the role's OWN currency (no FX).
+                                                                      # "unknown" = r.salary[salary_match_field] is null
+                                                                      #   -> include if salary_unknown_action=="include", else drop.
 results = apply_workplace_type_filter(results, entry.workplace_type)   # Glassdoor always; Indeed on_site + hybrid/on-site; LI if BETA unreliable
 results = apply_jobtype_filter(results, entry.job_type)                # Glassdoor always
 results = [r for r in results if r.date_posted >= date_after]          # date safety check, ALL boards
@@ -342,24 +389,27 @@ A single normalized array, handed to `/score-job`:
 ```json
 [
   {
-    "job_id": "li_8f3a...",
+    "job_id": "li_8f3a2b",
+    "raw_source_id": "8f3a2b",
     "source": "linkedin",
     "company": "Acme",
     "title": "Senior Data Engineer",
     "location": "Toronto, ON",
     "workplace_type": "hybrid",
-    "salary_stated": null,
+    "salary": { "min": 140000, "max": 180000, "currency": "CAD", "period": "annual" },
     "is_agency": false,
     "url": "https://...",
     "description": "...",
     "date_posted": "2026-05-24",
-    "source_search_name": ["swe_onsite_hybrid_canada"]
+    "source_search_name": ["swe_north_america"]
   }
 ]
 ```
 
 `source_search_name` is an array because cross-search dedupe collapses listings that matched multiple entries — useful downstream when you want to know which intent surfaced a job.
 `is_agency` is populated from `linkedin_org_recruitment_agency_derived` where the source provides it (LinkedIn); `null`/`false` elsewhere.
+
+**`salary` is always an object** — `{ min, max, currency, period }` — never a bare scalar. Any field is `null` when the listing doesn't state it; a fully-unknown salary is `{ "min": null, "max": null, "currency": null, "period": null }`. By the time the record reaches `/score-job`, `period` is always `"annual"` (hourly comps are converted in normalize). The salary filter tests `salary[salary_match_field]`; a `null` on that end is the "unknown" case governed by `salary_unknown_action`. `raw_source_id` carries the Actor's native listing ID (the part after the `li_`/`in_`/`gd_` prefix in `job_id`).
 
 ---
 
@@ -374,7 +424,9 @@ A single normalized array, handed to `/score-job`:
 
 Every Actor call specifies a result cap (`limit` for LinkedIn/Glassdoor, `maxRows` for Indeed). With per-location fetching the cost surface is:
 
-`(search entries) × (locations per entry) × (selected Actors) × (max_results_per_source_per_search)`
+`(search entries) × (locations per entry) × (selected Actors) × (job_type calls¹) × (max_results_per_source_per_search)`
+
+¹ **Indeed only.** Indeed accepts one `jobType` per call, so its call count multiplies by `|entry.job_type|` (2 in the current config: `full-time`, `contract`). LinkedIn takes the full job-type array in a single call and Glassdoor filters job type post-fetch, so for those two boards this term is `× 1`. If the open OR-operator question (below) resolves "not honored," Indeed and Glassdoor also multiply by `|entry.titles|` (one call per title).
 
 Two levers changed this from the earlier model:
 - **Per-location fetch multiplies by `locations per entry`** (no longer collapsed). For a 6-location entry this is a 6× increase over a single combined call per Actor — the deliberate cost of guaranteed small-metro coverage. Keep `max_results_per_source_per_search` modest (it's the per-location budget now, not per-entry).
@@ -428,6 +480,7 @@ Always apply the post-fetch date check (`r.date_posted >= today − N`) regardle
 
 ## Changelog
 
+- **2026-05-31 (seam fixes #2–#5 from spec review):** Closed four implementation seams flagged in `fetch-jobs-spec-review.md`. **(#2 salary)** `salary` is now a single object `{ min, max, currency, period }` everywhere — normalize, the `apply_salary_filter` comparison, and the output schema all agree; replaced the scalar `salary_stated` in the output; `null` on the tested end is the `salary_unknown_action` case; hourly→annual conversion happens in normalize before the filter. **(#3 translation)** Added *Field & location translation (definitions)* — concrete defs for `country_of`, `COUNTRY_LEVEL`, `li_/indeed_/glassdoor_location_string`, `indeed_country_code`, `country_to_location`, `translate_jobtype`, `translate_workplace`/`workplace_to_indeed`, `expand_variants`, plus grounding maps for the config's regions/countries (incl. the `CA` region-vs-country collision); `actor_location_format` is now documented as override-only and is `{}` in the live config (previously a `{ "...": "unchanged" }` stub). **(#4 Indeed job_type)** Pseudocode now loops over `entry.job_type` for Indeed (one `jobType` per call); cost formula gains a `job_type calls` term, Indeed-only. **(#5 Glassdoor IDs)** Defined `job_id = "{prefix}_{raw_source_id}"` and `raw_source_id`; Glassdoor `excludeJobIds` now gets `raw_ids_for("gd", seen)` (native IDs, prefix stripped) instead of the skill's prefixed IDs. *(Seam #1 — the `seen_jobs.json` vs `seen__jobs.json` filename mismatch — is a file/doc rename, not a spec edit, and is intentionally left out of this pass.)*
 - **2026-05-31 (entry selector):** Added an optional **entry selector** — an argument naming a single `config.searches[].name` to run, defaulting to all entries. Added the *Entry selection* and *Argument parsing* sections (source + entry are order-independent, classified by content; unknown source or entry tokens error rather than silently defaulting). Pseudocode resolves `entry_filter` and loops over the filtered `entries`. Cost surface notes that naming an entry collapses the `(search entries)` term to 1, and that the all-entries × all-locations default is the skill's most expensive run.
 - **2026-05-31 (schema migration + per-location + source arg):** Migrated Inputs + pseudocode to the live `search_config.json` shape (single in-currency `min_salary` + `salary_match_field`; `global` with `salary_normalization`, `max_per_employer`, `exclude_companies`, `actor_location_format`, `actor_enforcement`); removed the old per-currency floors and the divergence note. Replaced the multi-location crowding workaround with **unconditional per-location fetching** (`CAP` = `max_results_per_source_per_search` results per location, every Actor incl. fantastic-jobs); updated the cost surface accordingly. Added **Source selection**: optional second positional arg (`/fetch-jobs N [source]`) with `linkedin`/`indeed`/`glassdoor`/`all` aliases + full-slug support, defaulting to `fantastic-jobs` (LinkedIn only); unrecognized non-slug tokens error rather than fall back. Post-fetch filtering now keyed off each listing's `source_actor` against `actor_enforcement`.
 - **2026-05-31 (PM tuning findings):** Folded in findings from the `product_manager_north_america` × fantastic-jobs tuning pass. Added: `titleExclusionSearch` exact-phrase gotcha (abbrev vs spelled-out — VP/Vice President) as a dedicated table row; `removeAgency` + `linkedin_org_recruitment_agency_derived` agency-handling row and policy decision; within-Actor repost dedupe as a third explicit scope (verified 3× repost) with the `max_per_employer`-doesn't-absorb-it caveat and post-dedup ordering; multi-location crowding promoted to confirmed-across-two-entries; LinkedIn single-call-per-entry (location array) noted in field notes, pseudocode, and cost surface; Indeed `radius:"0"` metro pin and hybrid/on-site non-separation; `aiHasSalary` leave-unset guidance; `is_agency` added to output schema; salary normalization (hourly×2080) in normalize step; reference per-call costs. Added top-of-file **Config-schema divergence** note: this spec still documents the older `min_salary_cad`/`min_salary_usd` + slim `global` shape; live config uses single `min_salary` + `salary_match_field` + `salary_normalization` + `max_per_employer` + `actor_enforcement` — Inputs/pseudocode not yet migrated, flagged not silently rewritten.
