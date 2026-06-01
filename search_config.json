@@ -1,0 +1,87 @@
+{
+  "searches": [
+    {
+      "name": "swe_north_america",
+      "titles": ["Software Engineer", "Senior Software Engineer", "Backend Engineer", "Full Stack Engineer", "Platform Engineer", "Forward Deployed Engineer", "Product Engineer"],
+      "title_exclude": ["Manager", "Director", "Head of", "VP", "Vice President", "Internship"],
+      "locations": ["Toronto, ON", "Vancouver, BC", "New York, NY", "San Francisco, CA", "Newark, NJ"],
+      "countries": ["CA", "US"],
+      "workplace_type": ["on_site", "hybrid", "remote"],
+      "job_type": ["full-time", "contract"],
+      "min_salary": 130000,
+      "salary_match_field": "max"
+    },
+    {
+      "name": "ml_remote_north_america",
+      "titles": ["Machine Learning Engineer", "ML Engineer", "Applied Scientist", "AI Engineer"],
+      "title_exclude": ["Manager", "Director", "Head of", "VP", "Vice President", "Internship"],
+      "locations": ["Toronto, ON", "Vancouver, BC", "New York, NY", "San Francisco, CA", "Newark, NJ"],
+      "countries": ["CA", "US"],
+      "workplace_type": ["on_site", "hybrid", "remote"],
+      "job_type": ["full-time", "contract"],
+      "min_salary": 130000,
+      "salary_match_field": "max"
+    },
+    {
+      "name": "product_manager_north_america",
+      "titles": ["Product Manager", "Senior Product Manager", "Technical Product Manager"],
+      "title_exclude": ["Head of", "VP", "Vice President", "Internship"],
+      "locations": ["Toronto, ON", "Vancouver, BC", "New York, NY", "San Francisco, CA", "Newark, NJ"],
+      "countries": ["CA", "US"],
+      "workplace_type": ["on_site", "hybrid", "remote"],
+      "job_type": ["full-time", "contract"],
+      "min_salary": 105000,
+      "salary_match_field": "max"
+    },
+    {
+      "name": "project_manager_north_america",
+      "titles": ["Project Manager", "Senior Project Manager", "Technical Project Manager", "IT Project Manager", "Program Manager", "Technical Program Manager"],
+      "title_exclude": ["Head of", "VP", "Vice President", "Internship"],
+      "locations": ["Toronto, ON", "Vancouver, BC", "New York, NY", "San Francisco, CA", "Newark, NJ"],
+      "countries": ["CA", "US"],
+      "workplace_type": ["on_site", "hybrid", "remote"],
+      "job_type": ["full-time", "contract"],
+      "min_salary": 100000,
+      "salary_match_field": "max"
+    },
+    {
+      "name": "consultant_north_america",
+      "titles": ["Technology Consultant", "Technical Consultant", "Solutions Consultant", "Senior Consultant"],
+      "title_exclude": ["Manager", "Director", "Head of", "VP", "Vice President", "Internship"],
+      "locations": ["Toronto, ON", "Vancouver, BC", "New York, NY", "San Francisco, CA", "Newark, NJ"],
+      "countries": ["CA", "US"],
+      "workplace_type": ["on_site", "hybrid", "remote"],
+      "job_type": ["full-time", "contract"],
+      "min_salary": 110000,
+      "salary_match_field": "max"
+    }
+  ],
+  "global": {
+    "max_results_per_source_per_search": 20,
+    "salary_unknown_action": "include",
+    "salary_normalization": { "hourly_to_annual_multiplier": 2080 },
+    "max_per_employer": 3,
+    "exclude_companies": [],
+    "actor_location_format": { "...": "unchanged" },
+    "actor_enforcement": {
+      "fantastic-jobs/advanced-linkedin-job-search-api": {
+        "native": ["titles", "title_exclude", "locations", "job_type", "workplace_type"],
+        "post_fetch": ["min_salary"],
+        "notes": "Cleanest surface; ~14/15. Salary has no numeric floor input (aiHasSalary bool only — leave unset to honor unknown->include). Separates hybrid/on-site natively."
+      },
+      "borderline/indeed-scraper": {
+        "native": ["locations"],
+        "post_fetch": ["min_salary", "title_allowlist", "title_exclude", "workplace_type"],
+        "call_defaults": { "radius": "0" },
+        "limits": "one country + one location per call; one job_type per call; workplace = isRemote bool only (can't separate hybrid/on-site).",
+        "notes": "radius:'0' pins the metro (zero spillover confirmed). VP/Mgr excludes help but description-fuzzy junk still requires the title allow-list."
+      },
+      "valig/glassdoor-jobs-scraper": {
+        "native": [],
+        "post_fetch": ["min_salary", "title_allowlist", "location_pin", "workplace_type"],
+        "limits": "single keyword (no title array); NO radius param; NO workplace field at all.",
+        "notes": "Heaviest enforcement; ~4-6/15. Location precision is post-fetch ONLY (drop Albany/Melville/Jericho by checking location.name). Employer flooding (Deloitte 8/15) -> max_per_employer."
+      }
+    }
+  }
+}
