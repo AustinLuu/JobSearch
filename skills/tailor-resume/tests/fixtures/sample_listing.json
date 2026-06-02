@@ -1,0 +1,15 @@
+{
+  "job_id": "li_9c2e7a",
+  "raw_source_id": "9c2e7a",
+  "source": "linkedin",
+  "company": "Helix Imaging",
+  "title": "Senior Machine Learning Platform Engineer",
+  "location": "Toronto, ON",
+  "workplace_type": "hybrid",
+  "salary": { "min": 150000, "max": 190000, "currency": "CAD", "period": "annual" },
+  "is_agency": false,
+  "url": "https://example.com/jobs/9c2e7a",
+  "description": "Helix Imaging builds cloud ML infrastructure for regulated medical-imaging products. We are hiring a Senior Machine Learning Platform Engineer to own our model training and deployment platform on AWS. You will design scalable training and inference infrastructure (S3, EC2, Lambda), build CI/CD for model delivery, stand up production monitoring and automated recovery, and reduce model deployment cycle time. Strong plus: experience with distributed training, PyTorch, Slurm or similar schedulers, Docker, and working in an FDA 510(k) / ISO 13485 regulated environment with DICOM/PACS and PHI handling. You will mentor junior engineers and partner with clinical deployment teams. We value engineers who can cut deployment time, raise reliability, and keep infrastructure auditable.",
+  "date_posted": "2026-05-30",
+  "source_search_name": ["ml_remote_north_america", "swe_north_america"]
+}

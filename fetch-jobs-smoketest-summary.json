@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "requested_M": 1,
+    "snapped_window_N": 1,
+    "effective_days_for_date_check": 1,
+    "sources": [
+      "fantastic-jobs/advanced-linkedin-job-search-api"
+    ],
+    "entry_filter": "swe_north_america",
+    "cap_per_call": 20,
+    "agency_action": "annotate",
+    "multi_title_strategy": "or_join",
+    "generated_at_utc": "2026-06-01T04:33:21.492018+00:00"
+  },
+  "stats": {
+    "raw_items": 61,
+    "normalized": 61,
+    "missing_raw_files": [],
+    "drops": {
+      "salary_floor": 3,
+      "date_too_old": 11,
+      "dedupe_within_actor": 8,
+      "dedupe_cross_board": 1,
+      "dedupe_cross_run": 0,
+      "employer_cap": 11
+    }
+  },
+  "final_count": 27,
+  "listings_path": "/tmp/jsrun/.fetch-runs/20260601T043321/listings.json"
+}

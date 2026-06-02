@@ -1,0 +1,623 @@
+[
+  {
+    "job_id": "li_2181842040",
+    "raw_source_id": "2181842040",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "C&D Talent Advisory - Academy",
+    "title": "Forward Deployed Engineer (Mid-Senior) | Toronto, Hybrid",
+    "location": "Toronto, Ontario, Canada",
+    "workplace_type": "hybrid",
+    "salary": {
+      "min": 150000,
+      "max": 250000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://ca.linkedin.com/jobs/view/4422596339",
+    "description": null,
+    "date_posted": "2026-06-01",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181187279",
+    "raw_source_id": "2181187279",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Sitetracker",
+    "title": "Product Engineer",
+    "location": "Toronto, Ontario, Canada",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 85000,
+      "max": 165000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://ca.linkedin.com/jobs/view/4418360543",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181703916",
+    "raw_source_id": "2181703916",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Jobright.ai",
+    "title": "Staff Software Engineer",
+    "location": "Vancouver, British Columbia, Canada",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 150000,
+      "max": 200000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://ca.linkedin.com/jobs/view/4422586063",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181621620",
+    "raw_source_id": "2181621620",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Eyeline",
+    "title": "Lead Software Engineer, Production Systems",
+    "location": "Vancouver, British Columbia, Canada",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": null,
+      "max": null,
+      "currency": null,
+      "period": null
+    },
+    "is_agency": false,
+    "url": "https://ca.linkedin.com/jobs/view/4421620801",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181621611",
+    "raw_source_id": "2181621611",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Eyeline",
+    "title": "Software Engineer, Houdini",
+    "location": "Vancouver, British Columbia, Canada",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": null,
+      "max": null,
+      "currency": null,
+      "period": null
+    },
+    "is_agency": false,
+    "url": "https://ca.linkedin.com/jobs/view/4421609792",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181348248",
+    "raw_source_id": "2181348248",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "lululemon",
+    "title": "Software Engineer - EKS",
+    "location": "Vancouver, British Columbia, Canada",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 112200,
+      "max": 147200,
+      "currency": "CAD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://ca.linkedin.com/jobs/view/4418381180",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181348250",
+    "raw_source_id": "2181348250",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "lululemon",
+    "title": "Senior Software Engineer - Global Sourcing and Costing Technology",
+    "location": "Vancouver, British Columbia, Canada",
+    "workplace_type": "hybrid",
+    "salary": {
+      "min": 132600,
+      "max": 174000,
+      "currency": "CAD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://ca.linkedin.com/jobs/view/4418386186",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181840922",
+    "raw_source_id": "2181840922",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Baton",
+    "title": "Senior Software Engineer",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 180000,
+      "max": 230000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://www.linkedin.com/jobs/view/4421645777",
+    "description": null,
+    "date_posted": "2026-06-01",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181818135",
+    "raw_source_id": "2181818135",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Baton",
+    "title": "Software Engineer",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 140000,
+      "max": 180000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://www.linkedin.com/jobs/view/4421640775",
+    "description": null,
+    "date_posted": "2026-06-01",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181818151",
+    "raw_source_id": "2181818151",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Jack & Jill",
+    "title": "New Grad Software Engineer at fast-growing consumer social platform",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": null,
+      "max": null,
+      "currency": null,
+      "period": null
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422592307",
+    "description": null,
+    "date_posted": "2026-06-01",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181818293",
+    "raw_source_id": "2181818293",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Jack & Jill",
+    "title": "Forward Deployed Engineer ($130k-$180k + Equity) at Series A AI software startup",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 130000,
+      "max": 180000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422805237",
+    "description": null,
+    "date_posted": "2026-06-01",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181803423",
+    "raw_source_id": "2181803423",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Agentio",
+    "title": "Software Engineer",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 195000,
+      "max": 400000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://www.linkedin.com/jobs/view/4422809209",
+    "description": null,
+    "date_posted": "2026-06-01",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181784053",
+    "raw_source_id": "2181784053",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "PandoLogic",
+    "title": "Software Engineer",
+    "location": "New York, New York, United States",
+    "workplace_type": "hybrid",
+    "salary": {
+      "min": 165000,
+      "max": 325000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422587263",
+    "description": null,
+    "date_posted": "2026-06-01",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181726556",
+    "raw_source_id": "2181726556",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Jobright.ai",
+    "title": "Software Engineer, Generative AI",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 119000,
+      "max": 292000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422572938",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181715823",
+    "raw_source_id": "2181715823",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Jobright.ai",
+    "title": "Senior Forward Deployed Engineer",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 180000,
+      "max": 210000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422568866",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181646413",
+    "raw_source_id": "2181646413",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "talentpluto",
+    "title": "Forward Deployed Engineer",
+    "location": "New York, New York, United States",
+    "workplace_type": "remote",
+    "salary": {
+      "min": null,
+      "max": null,
+      "currency": null,
+      "period": null
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4421634007",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181619685",
+    "raw_source_id": "2181619685",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "ByteDance",
+    "title": "Backend Software Engineer - Platforms",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 156000,
+      "max": 387600,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://www.linkedin.com/jobs/view/4422576695",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181597040",
+    "raw_source_id": "2181597040",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Tapitab",
+    "title": "Senior Software Engineer",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": null,
+      "max": null,
+      "currency": null,
+      "period": null
+    },
+    "is_agency": false,
+    "url": "https://www.linkedin.com/jobs/view/4421610722",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181571085",
+    "raw_source_id": "2181571085",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Hunter Bond",
+    "title": "Platform Engineer \u2013 Quant Fund - Up to $240,000",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": null,
+      "max": null,
+      "currency": null,
+      "period": null
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4418393552",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181525753",
+    "raw_source_id": "2181525753",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "V\u00e9l'O Plaisir",
+    "title": "Software Engineer (Entry-Level / Associate)",
+    "location": "New York, New York, United States",
+    "workplace_type": "remote",
+    "salary": {
+      "min": null,
+      "max": null,
+      "currency": null,
+      "period": null
+    },
+    "is_agency": false,
+    "url": "https://www.linkedin.com/jobs/view/4418379515",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181484893",
+    "raw_source_id": "2181484893",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Fabric Ventures",
+    "title": "Software Engineer (Full Stack)",
+    "location": "New York, New York, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 180000,
+      "max": 260000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://www.linkedin.com/jobs/view/4422562593",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181818173",
+    "raw_source_id": "2181818173",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Jack & Jill",
+    "title": "Platform Engineer ($170k-$220k + Equity) at Stealth-mode Cloud Financial Data Platform",
+    "location": "San Francisco, California, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 170000,
+      "max": 220000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422594252",
+    "description": null,
+    "date_posted": "2026-06-01",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181752604",
+    "raw_source_id": "2181752604",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Talently",
+    "title": "Senior Frontend Software Engineer",
+    "location": "San Francisco, California, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 215000,
+      "max": 250000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4416421169",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181660753",
+    "raw_source_id": "2181660753",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "git-talent",
+    "title": "Full Stack Engineer",
+    "location": "San Francisco, California, United States",
+    "workplace_type": "hybrid",
+    "salary": {
+      "min": 120000,
+      "max": 160000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422561714",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181597043",
+    "raw_source_id": "2181597043",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Confidential Careers",
+    "title": "Forward Deployed Engineer",
+    "location": "San Francisco, California, United States",
+    "workplace_type": "hybrid",
+    "salary": {
+      "min": 170000,
+      "max": 210000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422576665",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181525758",
+    "raw_source_id": "2181525758",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Bobyard",
+    "title": "Forward Deployed Engineer",
+    "location": "San Francisco, California, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": 120000,
+      "max": 150000,
+      "currency": "USD",
+      "period": "annual"
+    },
+    "is_agency": false,
+    "url": "https://www.linkedin.com/jobs/view/4421617596",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  },
+  {
+    "job_id": "li_2181485280",
+    "raw_source_id": "2181485280",
+    "source": "linkedin",
+    "source_actor": "fantastic-jobs/advanced-linkedin-job-search-api",
+    "company": "Jobs via Dice",
+    "title": "Embedded Software Engineer \u2014 Munition System",
+    "location": "San Francisco, California, United States",
+    "workplace_type": "on_site",
+    "salary": {
+      "min": null,
+      "max": null,
+      "currency": null,
+      "period": null
+    },
+    "is_agency": true,
+    "url": "https://www.linkedin.com/jobs/view/4422583348",
+    "description": null,
+    "date_posted": "2026-05-31",
+    "source_search_name": [
+      "swe_north_america"
+    ]
+  }
+]
