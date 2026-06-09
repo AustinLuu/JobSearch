@@ -120,6 +120,13 @@ integrity constraints above.** Concretely, as explicit rules:
   certifications that fit the job and drop true-but-off-target ones (e.g. a CAD
   certification on an ML role). This is selection among real facts — legitimate
   tailoring, not fabrication. When in doubt, keep it; when clearly unrelated, cut it."
+- "**Always-include policy (deployment, overrides relevance-pruning):** every resume,
+  regardless of role, MUST include (a) the **B.Eng Mechatronics Engineering** degree in
+  `education`, and (b) the **PMP** (Project Management Professional) credential in
+  `certifications`, listed **first**. Both are real `cv.md` entries treated as
+  universally relevant, so this is honest selection, not fabrication. Education is never
+  page-trimmed and the renderer pins PMP against the page-budget cap — but they only
+  appear if you put them in the JSON, so include them on every run."
 
 Emit a **TailoredResume** object (schema below), plus the bookkeeping fields:
 
@@ -150,18 +157,23 @@ Emit a **TailoredResume** object (schema below), plus the bookkeeping fields:
   // school). Degree/institution/location/dates are always kept. So you needn't emit
   // those lines; if one slips through it's dropped at render. (Opt back in only via
   // the renderer's keep flag — not the normal path.)
-  "certifications": ["..."],  // Include ONLY role-relevant credentials. Prune ones
-                              // unrelated to the target role (e.g. a CAD cert on an ML
-                              // resume) — dropping a true-but-off-target credential is
-                              // tailoring, not dishonesty. List a credential in ONE
-                              // section only; the renderer drops any cert already shown
-                              // under Education but does NOT judge relevance — that's
-                              // your call here.
+  "certifications": ["..."],  // ALWAYS-INCLUDE POLICY (deployment): the **PMP**
+                              // (Project Management Professional) credential goes on
+                              // EVERY resume, listed FIRST, regardless of role — it is
+                              // treated as universally relevant. Beyond that, include
+                              // only role-relevant credentials and prune true-but-off-
+                              // target ones (e.g. a CAD cert on an ML resume) — dropping
+                              // an off-target credential is tailoring, not dishonesty.
+                              // List a credential in ONE section only; the renderer drops
+                              // any cert already shown under Education but does NOT judge
+                              // relevance — that's your call here. (The renderer also pins
+                              // PMP so the page-budget cap can never trim it; but you must
+                              // still put it in this list.)
 
   // --- fields used when filling the DESIGNED template (template_0.docx) ---
-  "role_title": "the TARGET job's title",   // headline under the name. Honest as a
-                              // headline for the role applied to — NOT a claim you hold it.
-                              // Use listing.title.
+  "role_title": "",           // NO LONGER RENDERED. The template has no headline line
+                              // under the name; the renderer ignores this field. Leave
+                              // it out (or empty). Kept here only for back-compat.
   "key_achievements": [       // top 2-3 highlights; each must trace to cv.md (gate checks numbers)
     { "label": "short theme", "text": "Action + result + real metric from cv.md" }
   ],
@@ -174,11 +186,9 @@ Emit a **TailoredResume** object (schema below), plus the bookkeeping fields:
 }
 ```
 
-> **Template-field integrity.** `role_title` is a headline for the role being applied
-> to (the listing's title) — it signals fit, it does **not** assert you currently hold
-> that title, and nothing elsewhere may claim you do. `key_achievements` are pulled from
-> real experience: every number in them must trace to `cv.md`, and the integrity gate
-> checks them like any other output text.
+> **Template-field integrity.** `key_achievements` are pulled from real experience:
+> every number in them must trace to `cv.md`, and the integrity gate checks them like
+> any other output text. (`role_title` is no longer rendered — see above.)
 
 Save as `filter2.json`. **`_inserted_keywords` must list every Filter-1 keyword
 you incorporated** — the integrity gate checks each against `cv.md`.
@@ -191,22 +201,31 @@ keyword-stuffing** Filter 2 introduced (robotic phrasing, keyword lists masquera
 as sentences). Keep the same TailoredResume schema. Preserve every number and
 keyword's traceability — do not add new numbers or claims here.
 
-**One-page budget.** The rendered resume targets a single US-Letter page, so select
-*and* tighten content to fit it. Required minimums: **at least 3 experiences and at
-least 2 projects**, and the **top (most-relevant) experience carries at least 3 bullets**
-(omitting whole low-relevance roles is fine *above* that floor, not below it). Beyond the
-floor, fit one page by **shortening bullet prose to ~1 line each**, not by dropping below
-the minimums — a 3-line bullet costs as much room as three 1-line bullets, so tighten
-wording (and you may drop a role's `context` line) while keeping **every metric
-verbatim**. Never drop or alter a metric, and never merge two accomplishments into one
-combined number. Rough budget for this seniority: the top experience **≥3 bullets**,
-other experiences 1–2 each; 2 projects with 1 bullet each; 3–4 skill groups; a 1–2 line
-summary; and keep each **key achievement to ~one line** (they should fit without help —
-the renderer's tightener only mops up lines that overflow by ≤10%). List any credential
-in **one section only** — a course/specialization goes under Education *or*
-Certifications, never both (cv.md lists some in both; pick one). The renderer measures
-the real page count and flags over-budget output — see *Render* — so when in doubt,
-tighten bullets before cutting, and cut a whole low-value item only after that.
+**One-page budget — supply a superset, let the packer fit it.** The rendered resume targets a
+single US-Letter page, but **you do not pre-trim to one page** — the renderer's two-phase packer
+does the page math (see *Render*). Your job is to supply a **generous, most-relevant-first
+superset** and keep every line honest. Required floors the packer always honors: **at least 3
+experiences and at least 2 projects, and the top (most-relevant) experience carries at least 3
+bullets.** Above those floors, **over-supply**: up to ~5 experiences and ~4 projects, 3 key
+achievements, a full header (up to ~9 `areas_of_expertise`, a `context` line per role, an
+`additional_skills` line). Phase 1 trims the excess to fit one page; Phase 2 grows it back to
+fill the page — so more honest material is better, not worse. The one thing you must do is write
+**tight ~1-line bullets**: the packer caps bullet *counts*, never wording, so a 3-line bullet
+wastes the room it is trying to fill. Keep **every metric verbatim**; never drop, alter, or merge
+metrics, and never combine two accomplishments into one number. Keep each **key achievement to
+~one line** (the renderer's gentle tightener only pulls up one- or two-word widows, condensing
+≤7%). List any credential in **one section only** — a course/specialization goes under Education
+*or* Certifications, never both (cv.md lists some in both; pick one).
+
+> **Division of labor with the renderer.** You don't size the page; the two-phase packer does.
+> Phase 1 sheds *presentation overhead first* (areas count, per-role `context`, the ADDITIONAL
+> SKILLS line, trailing certs, one key achievement, non-top bullet counts) and only drops below
+> the floors (≥3 experiences, ≥2 projects, top ≥3 bullets) as a last resort; Phase 2 then grows
+> whole items back to fill the page. So **supply a generous superset** (up to ~5 experiences,
+> ~4 projects, ~9 `areas_of_expertise`, a `context` per role, an `additional_skills` line, 3 key
+> achievements) and let the renderer choose how much lands. Your job: **tight ~1-line bullets**
+> and content that is **honest and most-relevant-first**; the packer handles the page math
+> against the real (Word) layout without touching wording, metrics, or the floors.
 
 Emit the **final TailoredResume** (same schema, carrying `_inserted_keywords`
 forward, possibly trimmed if you removed a stuffed keyword) plus:
@@ -255,7 +274,7 @@ python scripts/render_template.py \
   --template "<root>/templates/template_0.docx"
 ```
 
-This populates the template's sections (Name, Role Title, Contact, Summary, Areas of
+This populates the template's sections (Name, Contact, Summary, Areas of
 Expertise, Key Achievements, Professional Experience, Projects, Education &
 Certifications, Additional Skills), cloning its repeatable blocks to fit your content
 and reusing its own runs so the **embedded font carries over**. It returns JSON with an
@@ -263,48 +282,95 @@ and reusing its own runs so the **embedded font carries over**. It returns JSON 
 block stays **3-column**, which `ats_flags` flags as a parse risk every run.
 
 It also runs a **one-line tightener** by default: any target line (bullet, key-achievement,
-education detail, additional-skills, summary) that wraps to two lines *by only a hair*
-gets a near-invisible horizontal condense (`w:w`, ≥90% / ≤10%) so the orphan word pulls
-up to one line. Lines needing more than that are left to wrap — that's a content-trim
-call, not a squish. It changes no text (the integrity gate is unaffected), is measured
-against LibreOffice layout, and reports what it condensed under `tighten.applied`. Tune
-with `--min-scale` or disable with `--no-tighten`; it no-ops if LibreOffice/pdfplumber
-aren't present.
+education detail, additional-skills, summary) that wraps to two lines and *can* be recovered
+gets a near-invisible horizontal condense (`w:w`) so the trailing widow word pulls up to one
+line. The condense is a **gentle cap — `WIDOW_MIN_SCALE = 0.93`** (≤7% narrower, imperceptible);
+harder cases are left to wrap and the packer reclaims the line instead. It accounts for the
+bullet's non-scaling hanging indent, leaves genuine two-line content wrapped, changes no text
+(the integrity gate is unaffected), and reports what it condensed under `tighten.applied`. Tune
+with `--min-scale` or disable with `--no-tighten`. It is measured with **LibreOffice** and
+**no-ops where LibreOffice/pdfplumber aren't present** (e.g. a Windows/Word-only box) — harmless,
+since the tightener is only polish; the two-phase packer does the real fitting.
 
-**Fit here is content-only, and now automatic.** The template's fonts/margins are fixed
-(do NOT shrink them — that fights the design), so length is governed by trimming content.
-By default `render_template.py` runs a **dynamic content budget**: it fills, measures the
-real page count, and if over the target (`--max-pages`, default **1**) it walks a ladder of
-progressively tighter budgets — re-rendering and re-measuring after each — stopping at the
-loosest tier that fits:
+**Fit is content-only, automatic, and two-phase.** The template's fonts/margins are fixed
+(do NOT shrink them — that fights the design), so length is governed by **how many whole items**
+are shown. `render_template.py` fills, measures the real page count and fill via the active
+backend (see *Measurement backend* below), and adjusts in two phases. **Phase 1 (shrink to fit):**
+walk the budget ladder from richest (`rich-max`) to leanest, re-rendering and re-measuring after
+each, and stop at the **first tier that fits `--max-pages` (default 1)** — shedding presentation
+overhead before content:
 
-| tier | key achievements | experiences | top / other bullets | projects | tightener floor |
-|---|---|---|---|---|---|
-| full | 3 | 3 | 4 / 2 | 2 | 0.90 |
-| tight-ka | 2 | 3 | 3 / 2 | 2 | 0.90 |
-| one-project | 2 | 3 | 3 / 2 | 1 | 0.88 |
-| hard-bullets | 2 | 3 | 2 / 1 | 1 | 0.85 |
-| last-resort | 2 | 2 | 2 / 1 | 1 | 0.82 |
+| tier | key ach. | experiences | top / other bullets | projects | areas | context | add'l skills | certs | tightener |
+|---|---|---|---|---|---|---|---|---|---|
+| rich-max | 3 | 5 | 6 / 3 | 4 | 9 | keep | keep | all | 0.94 |
+| rich | 3 | 5 | 5 / 3 | 3 | 9 | keep | keep | all | 0.93 |
+| rich-lean | 3 | 4 | 5 / 3 | 3 | 9 | keep | keep | all | 0.93 |
+| full-plus | 3 | 4 | 5 / 2 | 2 | 9 | keep | keep | all | 0.92 |
+| full | 3 | 3 | 4 / 2 | 2 | 9 | keep | keep | all | 0.92 |
+| lean-context | 3 | 3 | 4 / 2 | 2 | 8 | drop | keep | all | 0.90 |
+| lean-ka | 2 | 3 | 4 / 2 | 2 | 6 | drop | keep | 2 | 0.90 |
+| lean-areas | 2 | 3 | 3 / 2 | 2 | 5 | drop | drop | 1 | 0.88 |
+| lean-bullets | 2 | 3 | 3 / 1 | 2 | 4 | drop | drop | 1 | 0.86 |
+| lean-max | 2 | 3 | 3 / 1 | 2 | 3 | drop | drop | 1 | 0.84 |
+| one-project | 2 | 3 | 3 / 1 | **1** | 3 | drop | drop | 1 | 0.84 |
+| hard-bullets | 2 | 3 | **2** / 1 | 1 | 3 | drop | drop | 1 | 0.82 |
+| last-resort | 2 | **2** | 2 / 1 | 1 | 3 | drop | drop | 1 | 0.80 |
 
-Every tier trims by **whole-item omission only** (drop a key achievement, a trailing
-bullet, a project, a trailing role) and pushes the tightener harder — it NEVER edits a
-bullet's words or a metric, so the integrity gate result is unchanged (omission, never
-fabrication). Items are most-relevant-first, so trimming drops the least-relevant material.
-The returned JSON reports `fit_ok`, the `tier` used, what was `trimmed` (e.g.
-`key_achievements: 3->2`), and the full `ladder`.
+**Header is cut before content.** The ladder is ordered so the **content floors —
+≥3 experiences, ≥2 projects, top role ≥3 bullets — are protected for as long as possible.**
+The first ten tiers (`rich-max`…`lean-max`) shed only *presentation overhead* — areas-of-expertise
+count, experience `context` lines, the ADDITIONAL SKILLS line, trailing low-relevance
+certifications, one key achievement, and non-top bullet counts down to their allowed minimum —
+while keeping all three floors intact.
+Only the final three tiers (`one-project`, `hard-bullets`, `last-resort`) drop **below** a
+floor, and only because even a fully-lean header still overflows. Every tier trims by
+**whole-item omission only** (drop an area, a context blurb, the additional-skills line, a key
+achievement, a trailing bullet, a project, a trailing role) — it NEVER edits a bullet's words
+or a metric, so the integrity gate result is unchanged (omission, never fabrication). Items are
+most-relevant-first, so trimming drops the least-relevant material.
 
-**Filter 3 still owns bullet length.** The cascade caps *counts*, not wording — so if your
-bullets are long (2–3 lines), the cascade compensates by dropping whole roles and can fall
-all the way to `last-resort` (2 experiences). If Filter 3 tightens bullets to ~1 line first,
-the cascade stays gentle and keeps 3 experiences. So: write tight bullets; let the cascade
-be the safety net, not the primary trimmer.
+**Phase 2 (grow to fill).** If the chosen tier honors the floors **and** the page is under
+`--fill-target` (default **0.96**) full, the renderer greedily adds whole items back —
+**experiences and projects first, then bullets** (`+1 experience → +1 project → +1 top-role
+bullet → +1 other-role bullet`), staying on each op while it keeps fitting — up to caps
+`(experiences 8, top bullets 8, other bullets 6, projects 8)`, bounded to 16 trial renders. The
+committed result is tagged `<tier>+fill`. Growth is whole-item too, so integrity is again
+untouched. Disable Phase 2 with `--no-grow`; raise/lower the goal with `--fill-target`. The
+returned JSON reports `fit_ok`, the `tier` used (`+fill` if Phase 2 grew it), what was `trimmed`,
+the `fill` ratio (from the active backend), and the full Phase-1 `ladder`.
+
+**Measurement backend — this is what makes the fill honest.** Page count and fill come from
+`scripts/measure_fit.py`, with two backends chosen by the `RESUME_FIT_BACKEND` env var (default
+`auto`):
+
+- **`word`** — drives **real MS Word via COM (`pywin32`)**. AUTHORITATIVE: it measures the page
+  exactly as the candidate sees it. Picked automatically on Windows when Word + pywin32 are
+  present. **This is the Cowork/desktop path; it requires `pip install pywin32` and a desktop MS
+  Word install.**
+- **`soffice`** — LibreOffice → PDF (pypdf/pdfplumber). Cross-platform fallback for the
+  cloud-headless path. **It lays this template out ~1in taller than Word**, so on its own it
+  stops the packer ~5 lines short of a full Word page — which is exactly why the Word backend
+  exists. Treat its fill numbers as approximate.
+
+`auto` picks Word on Windows (falling back to LibreOffice if Word can't start), LibreOffice
+elsewhere. Force with `RESUME_FIT_BACKEND=word|soffice`. Sanity-check the backend on any machine
+with `python scripts/measure_fit.py --file <resume>.docx --diagnose`.
+
+**So Filter 3 should supply a GENEROUS SUPERSET, most-relevant-first — and let the packer choose
+how much fits.** Provide **more than will fit**: up to ~5 experiences and ~4 projects, 3 key
+achievements, up to ~9 `areas_of_expertise`, a `context` line per role, and an `additional_skills`
+line. Phase 1 trims it to one page; Phase 2 grows it back to fill — both against the *real* (Word)
+layout. Still write **tight ~1-line bullets**: the packer caps bullet *counts*, not wording, so
+2–3 line bullets waste the room it is trying to fill and can force a tier below a floor. Generous
+superset + tight bullets = a full one-page resume at whatever tier fits, all floors honored
+(verified: a dense senior CV landed at `lean-areas`, 98.7% full in Word, one page).
 
 If even `last-resort` is over target, the tightest render is left on disk with
 `fit_ok: false` and a note — accept the overflow and mark `needs human check`, or cut more
-in Filter 3. If LibreOffice/pdfplumber aren't installed, page count is unmeasurable: it
-renders the full budget and reports `fit_ok: null` (flag it). Disable the cascade with
-`--no-cascade` (single fill at full budget + tighten), or change the target with
-`--max-pages N`.
+in Filter 3. If **neither** backend can measure (no Word/pywin32 **and** no LibreOffice/pypdf),
+page count is unmeasurable: it renders the full budget and reports `fit_ok: null` (flag it).
+Disable the whole cascade with `--no-cascade` (single fill at the richest budget + tighten), or
+change the target with `--max-pages N`.
 
 **B. No designed template** (blank/absent). Use the from-scratch ATS renderer with
 one-page fit:
@@ -360,7 +426,8 @@ The orchestrator (Phase 4), not this skill, appends the `job_id` to
 | `scripts/common.py` | Paths, filename convention, cv number extraction, TailoredResume validation. Imported by the others. |
 | `scripts/integrity_gate.py` | The honesty check (numbers + inserted keywords vs `cv.md`). Flags, never rejects. |
 | `scripts/render_docx.py` | TailoredResume JSON → ATS-safe `.docx` built from scratch (used when there is NO designed template). One-page fit via density ladder. |
-| `scripts/render_template.py` | TailoredResume JSON → fills the **designed** `template_0.docx` in place (preserves embedded fonts/styles/3-col skills). The normal renderer here; returns `ats_flags`. |
+| `scripts/render_template.py` | TailoredResume JSON → fills the **designed** `template_0.docx` in place (preserves embedded fonts/styles/3-col skills). The normal renderer here; two-phase shrink-then-grow packer, returns `ats_flags`/`tier`/`fill`/`ladder`. |
+| `scripts/measure_fit.py` | Page-count + fill measurement behind the packer. Pluggable backend (`RESUME_FIT_BACKEND`): **`word`** via pywin32/COM (authoritative, Windows/Cowork) or **`soffice`** via LibreOffice (headless fallback). Has a `--diagnose` CLI to verify the backend on a given machine. |
 | `scripts/make_template.py` | One-time: generate the canonical `templates/template_0.docx`. |
 
 Run `python scripts/make_template.py` once after install so a base template exists.

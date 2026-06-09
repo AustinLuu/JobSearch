@@ -6,20 +6,20 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
 
 ## Skills
 - **Languages:** Python, Java, JavaScript, TypeScript, C, C++, SQL, NoSQL, MATLAB, Octave, VBA, VHDL, Ladder Logic, LaTeX,
-- **Web / Frontend:** HTML, CSS/SCSS, React.js, Next.js, jQuery, Node.js, Bootstrap, npm, Django, Tailwind CSS, REST APIs, async programming
+- **Web / Frontend:** HTML, CSS/SCSS, React.js, Next.js, jQuery, Node.js, Bootstrap, npm, Django, Tailwind CSS
 - **Data / ML libraries:** PyTorch, TensorFlow, Scikit-Learn, Pandas, NumPy, SciPy, Matplotlib, Seaborn, Jupyter Notebook
-- **ML / Deep Learning:** Convolutional Neural Networks (CNNs), Recurrent Neural Networks (RNNs), Transformers, Statistical Analysis, Linear/Logistic Regression, SVM, K-Means Clustering, Regularization, Hyperparameter Tuning, Adam, multimodal ML / foundation models, model fine-tuning, synthetic data generation, optimization
+- **ML / Deep Learning:** Convolutional Neural Networks (CNNs), Recurrent Neural Networks (RNNs), Transformers, Statistical Analysis, Linear/Logistic Regression, SVM, K-Means Clustering, Regularization, Hyperparameter Tuning, Adam
 - **NLP:** NLTK, BERT, GPT-3, NLP, NLU
-- **Computer Vision:** OpenCV, SimpleCV, YOLO, ResNet-50, U-Net, Image Recognition, 3D graphics
-- **Cloud / Infra:** AWS (S3, EC2, Lambda, CodeDeploy, CloudWatch, IAM, Step Functions, SageMaker), GCP, Docker, Kubernetes, Slurm, Apache Spark, Unix/Linux, Bash, Git
+- **Computer Vision:** OpenCV, SimpleCV, YOLO, ResNet-50, U-Net, Image Recognition
+- **Cloud / Infra:** AWS (S3, EC2, Lambda, CodeDeploy, CloudWatch, IAM), GCP, Docker, Slurm, Unix/Linux, Bash, Git
 - **Databases:** SQL, NoSQL, SQLite
 - **Design / CAE / CAD:** SolidWorks (CSWA Certified), AutoCAD, Autodesk Inventor, GrabCAD, ANSYS, GMSH, SOFA, FMEA
 - **Manufacturing / Hardware:** FDM 3D Printing, Laser Cutting, Turning, Milling, Drilling, Arc & MIG Welding, Soldering, Arduino (Mega / 101), MQTT Protocol, OMRON PLC
-- **BI / PLM / Tools:** Microsoft Office (Excel), Power BI, Tableau, CRM, Navision, Salesforce, ENOVIA, Teamcenter PLM, Jira, Confluence, Notion, Figma, Adobe Photoshop, WordPress CMS, Bluehost, Google Maps API, web scraping, Microsoft Project, SharePoint / Office 365, management consulting
-- **AI / Agentic:** Claude Code / Claude Skills, MCP (Model Context Protocol), AI agent orchestration & subagent-driven SDLC, dynamic context engineering, AI process/workflow automation, evaluation harnesses & rubrics, progressive-disclosure architecture, AI governance, Codex, RAG / retrieval systems, LLM evaluation methodologies, GitHub Copilot, Cursor, model drift monitoring, RLHF, prompt & chain-of-thought engineering, responsible AI, multi-agent systems
+- **BI / PLM / Tools:** Microsoft Office (Excel), Power BI, Tableau, CRM, Navision, Salesforce, ENOVIA, Teamcenter PLM, Jira, Confluence, Notion, Figma, Adobe Photoshop, WordPress CMS, Bluehost, Google Maps API, web scraping
+- **AI / Agentic:** Claude Code / Claude Skills, MCP (Model Context Protocol), AI agent orchestration & subagent-driven SDLC, dynamic context engineering, AI process/workflow automation, evaluation harnesses & rubrics, progressive-disclosure architecture, AI governance, Codex
 - **Security / IT:** CrowdStrike Falcon (Falcon Insight / EDR), Syxsense, endpoint management & protection, USB device control, firewall management, static code analysis
 - **Healthcare / Imaging:** DICOM, PACS, PHI de-identification
-- **Regulatory / Quality:** HIPAA, PHIPA, FDA 510(k), ISO 13485, SaMD, QMS, design controls, V&V, SBOM, SOC 2, PCI-DSS, risk management
+- **Regulatory / Quality:** HIPAA, PHIPA, FDA 510(k), ISO 13485, SaMD, QMS, design controls, V&V, SBOM, SOC 2, PCI-DSS
 
 ---
 
@@ -104,36 +104,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
   **Y:** 2 junior engineers brought to independent feature ownership within 3 months.
   **Z:** Pair programming, structured code review, and architecture/debugging guidance.
 
-**Added 2026-06-04 (gap-closure):**
-
-- **LLMs (production):** Designed and shipped LLM-powered production systems — a subagent-driven SDLC pipeline and a model-/provider-agnostic runtime context system — cutting token consumption 82–87% and development time 88%, by doing multi-agent orchestration over MCP with Confluence/Jira connectors across 4+ projects.
-- **Microservices:** Built the backend as independently deployable microservices communicating via APIs on AWS Lambda, EC2, and S3 with IAM access controls and CloudWatch monitoring, raising monitoring/automated-recovery coverage from 0 to 100% of services, cutting incident count by 80%, and cutting backend response time to the customer UI by 95%.
-- **Embeddings / transformer segmentation:** Built a transformer-based U-Net (UNETR) for abdominal segmentations on CT/MRI DICOM scans, using patch embeddings to capture long-range spatial context, raising Dice score by 17.32% over a convolutional baseline.
-- **Distributed systems:** Designed and operated distributed compute for ML workloads across EC2 HPC nodes with Slurm scheduling and failure handling, reducing pipeline runtime by 39% and raising automated-recovery coverage from 0 to 100% of services.
-- **Scrum Master:** Served as Scrum Master for an 8-person team — sprint planning, stand-ups, and retrospective facilitation — facilitating removal of sprint blockers and improving velocity by 20%+.
-- **Agile delivery:** Delivered 5 projects using Agile methodologies (sprints, stand-ups, pair programming) across 6–12-person teams, improving throughput by over 30%.
-- **Observability:** Built production observability across data-processing and backend services with CloudWatch monitoring, alerting, and automated recovery, raising coverage from 0 to 100% of services and cutting mean time to detect by over 90%.
-- **Waterfall / phase-gated delivery:** Delivered FDA 510(k) and SOC 2 compliance projects under a phase-gated/Waterfall model within an FDA 510(k)/ISO 13485 design-control framework, producing 20+ design-control documents with audit-ready change records.
-- **Change management:** Drove change management for Atlassian tool adoption via knowledge-sharing and training sessions, training 10+ engineers and researchers across 3 sessions each and bringing R&D and Product Development to full adoption.
-- **Prompt engineering:** Applied prompt and context engineering to build a model-/provider-agnostic dynamic context system that assembles, scopes, and prunes context at runtime, cutting token consumption by 82–87% across 4+ projects.
-- **MLOps:** Built MLOps tooling and a scalable ML platform standardizing data ingestion, model training, and deployment, cutting new-model deployment time 80% (5 days → 1 day) and raising monitoring coverage from 0 to 100% of services.
-- **RLHF:** Contributed to RLHF post-training of a SAM-based auto-masking segmentation model, running the RL training loop and evaluating mask outputs against human-preference labels, improving mean Dice by 5.23%.
-- **Technical program management:** Led the ML-platform build, org-wide AI governance, the subagent-driven SDLC pipeline, and engineer mentoring as technical program lead.
-- **Event-driven architecture:** Designed an event-driven workflow on AWS Lambda integrated with EC2 and S3 — IAM access controls, CloudWatch monitoring/alerting, failure handling — reducing operational downtime by a projected 67%.
-- **RAID management:** Owned and maintained RAID logs (risks, assumptions, issues, dependencies) and status reporting for 2 major products, tracking 100+ items and supporting governance forums across 3 teams.
-- **SharePoint / documentation:** Managed project documentation in SharePoint / Office 365 for a major product across three teams, organizing 30+ documents and improving findability/version control for 20+ stakeholders.
-- **Agent orchestration:** Architected a subagent-driven orchestration layer coordinating specialized AI agents (orchestrator/engineering-manager plus developer, code-reviewer, test-writer, QA/V&V, documentation, and security agents) across the SDLC, reducing development time by 88%.
-- **AI-assisted development (Cursor):** Used AI-assisted development tooling (Cursor) within a subagent-driven pipeline to accelerate the SDLC, shifting engineers toward PR review and curation and reducing development time by 88%.
-- **MLOps experiment tracking:** Standardized model training and deployment workflows on the ViTAA ML platform using experiment-tracking and model-versioning tooling, cutting experiment setup time by 85% and enabling up to 5× higher experiment throughput across 10 engineers.
-- **Responsible AI:** Led org-wide Responsible AI governance and policy development, establishing 2 AI governance policies and building an automated V&V/SBOM tool that inventoried and tracked 15 AI tools at 100% coverage.
-- **Stakeholder management:** Managed stakeholder relationships across business, operational, and technical teams on a $1M product development, advising 10+ stakeholders across 6+ teams to align objectives and unblock delivery.
-- **ETL / data engineering:** Designed and rebuilt ETL/data-ingestion pipelines (Slurm-managed parallel execution on AWS EC2; DICOM ingestion with de-identification) that loaded 1 TB+ of imaging data from 5 hospital sites, reducing pipeline runtime by 39%.
-- **AI guardrails:** Designed and enforced AI guardrails — hard validation gates, source-tagging, governance policies — across 4+ AI workflows, establishing 2 AI governance policies.
-- **Model monitoring:** Extended production monitoring to deployed ML models on SageMaker, tracking p95 endpoint latency via CloudWatch and catching latency regressions before they affected users.
-- **Chain-of-thought prompting:** Designed and critiqued chain-of-thought prompts for agent workflows, structuring step-by-step reasoning that improved output rubric scores from 69→86.
-- **Multi-agent systems:** Architected a multi-agent system coordinating 11 specialized subagents (orchestrator plus engineering agents) across tools and services to run the SDLC workflow, reducing development time by 88%.
-- **Kubernetes:** Deployed and operated containerized backend API services on Kubernetes across 4 nodes, by doing container packaging, Deployment/StatefulSet manifests, and horizontal autoscaling, reducing downtime occurrences by around 90%.
-
 ---
 
 ### Software Development Engineer I — ViTAA Medical Solutions
@@ -162,11 +132,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
 - **X:** Established and provided training for an automated unit-testing framework for a team of engineers.
   **Y:** 300+ tests across 10+ components; team of 10+ engineers.
   **Z:** Automated unit-testing framework.
-
-**Added 2026-06-04 (gap-closure):**
-
-- **Data annotation / QA:** Owned data annotation/QA for 3D cardiovascular segmentation training data, building tooling and review loops that reduced QA manual adjustments by over 27% on a 92.84% Dice-score model.
-- **Test-driven development:** Practiced test-driven development across 4+ projects, writing tests ahead of implementation, building on the automated unit-testing framework (300+ tests across 10+ components).
 
 ---
 
@@ -202,10 +167,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
   **Y:** 4+ automations delivered.
   **Z:** AI process automation.
 
-**Added 2026-06-04 (gap-closure):**
-
-- **Angular:** Built a booking feature in Angular for a customer home-staging web application, delivering 3 pages and improving load time by 38%.
-
 ---
 
 ### Senior Analyst — CIBC
@@ -227,13 +188,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
   **Y:** Trained 10 senior bank tellers across 3 sessions each.
   **Z:** Knowledge-sharing sessions; training.
 
-**Added 2026-06-04 (gap-closure):**
-
-- **Technical program management:** Advised a $50M transformation across 6+ teams as a technical program/project lead.
-- **Financial-services domain:** Served as a key project consultant on a $50M business-banking transformation initiative at CIBC, advising 100+ stakeholders across 6+ teams within a major financial institution.
-- **Executive presentations:** Produced executive-ready assessment reports, process charts, and presentation deliverables for a $50M banking transformation initiative, and facilitated knowledge-sharing/training sessions for stakeholders.
-- **Microsoft Project:** Planned and tracked the project schedule in Microsoft Project, doing Gantt management across 30+ tasks and keeping milestones on target.
-
 ---
 
 ### Data Analyst — TOHacks
@@ -250,12 +204,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
 - **X:** Conducted A/B testing to assess the impact of various design decisions, increasing user conversion.
   **Y:** 20% increase in user conversion.
   **Z:** A/B testing of design decisions.
-
-**Added 2026-06-04 (gap-closure):**
-
-- **A/B testing:** Designed and ran A/B tests on design decisions to measure impact on user behavior, driving a 20% increase in user conversion.
-- **BigQuery (registration analytics):** Analyzed participant registration and engagement data (1000+ applicants) in BigQuery, writing SQL to surface demographic and sign-up trends that informed outreach and grew applications by 28%.
-- **BigQuery (survey analytics):** Queried post-event survey responses from 500+ participants in BigQuery, identifying satisfaction and drop-off drivers that shaped programming and sponsor reporting.
 
 ---
 
@@ -277,11 +225,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
 - **X:** Led product development to acquire new machine tooling, expanding product variability and enabling sustainable materials development, including compostable, renewable, and post-consumer recycled materials.
   **Y:** Managed a $1M capital budget and acquired 4 unique new tools, increasing product variability by over 20%.
   **Z:** New machine tooling acquisition; sustainable materials development.
-
-**Added 2026-06-04 (gap-closure):**
-
-- **Budget / financial management:** Managed a $1M capital budget to acquire 4 new machine tools, expanding product variability by over 20% while controlling spend against forecast.
-- **Vendor management:** Managed 13 third-party vendors delivering tooling, raw materials, and packaging components, by doing contract/deliverable tracking and dependency management and holding vendors to delivery milestones, reducing vendor cost by over 10% and manufacturing slippage occurrences by over 30%.
 
 ---
 
@@ -307,12 +250,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
 - **X:** Developed VBA macros for consolidating and analyzing performance-metric reports, scrubbing customer BOMs for product data management, and neural-network predictive analysis of component cost based on description.
   **Y:** Saved team members over 20 hours per week and increased customer component-processing throughput by over 30%; cost-prediction model achieved 92% accuracy within a 5% cost tolerance.
   **Z:** VBA macros; CRM and Power BI for performance-metric reporting; neural-network model for component-cost prediction.
-
-**Added 2026-06-04 (gap-closure):**
-
-- **Vendor management:** Managed 100+ first- and third-party vendors delivering electronic components, by doing contract/deliverable tracking and dependency management and holding vendors to delivery milestones, reducing cost by 4–5%.
-- **Stakeholder management:** Managed stakeholder relationships across business, operational, and manufacturing teams on a $2M product line, advising 30+ stakeholders across 6+ teams to align objectives and unblock delivery.
-- **R (statistical modeling):** Performed statistical modeling in R on an internal electronics component-pricing dataset, producing 1 model and 3 reports that informed a cost-saving initiative contributing to ~$1.5M in annual savings.
 
 ---
 
@@ -388,10 +325,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
   **Y:** Works at any repo scale; supports 5 language/framework stacks (Express, Django, Go, Java/Spring, Rails), with more in development.
   **Z:** Static application-code analysis; code-to-control-criteria mapping; control-narrative generation.
 
-**Added 2026-06-04 (gap-closure):**
-
-- **Reasoning-trace authoring:** Authored high-fidelity structured reasoning traces for control mapping, documenting step-by-step logic across 3 compliance frameworks to support training and audits.
-
 ---
 
 ### Satellite
@@ -417,10 +350,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
   **Y:** Validated trigger reliability across 4 positive/negative test cases (4/4 pass).
   **Z:** Spec + handoff docs; positive/negative trigger test cases.
 
-**Added 2026-06-04 (gap-closure):**
-
-- **Model evaluation methodologies:** Designed evaluation methodologies for AI system outputs — a pass/fail validation harness with hard gates, weighted scoring, and automatic deductions — across 10 hard gates and 9 weighted categories, raising rubric scores from 69→86 and 74→81 across iterations.
-
 ---
 
 ### RoadCV
@@ -438,10 +367,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
 - **X:** Designed and implemented an AI-driven Discord bot that simulates karaoke with real-time speech recognition and pitch & lyrical accuracy scoring.
   **Y:** Achieved 5 ms processing latency and supported over 50,000 songs.
   **Z:** Python (back end) and JavaScript (front end); Aubio, NumPy, SpeechRecognition, Pydub, LyricsGenius, and Wave for audio analysis; Node.js, Discord.js, and PythonShell for interfacing.
-
-**Added 2026-06-04 (gap-closure):**
-
-- **Chatbots / copilots:** Designed and built an AI-driven conversational bot integrating real-time speech recognition and a scoring engine into a Discord copilot, achieving 5 ms processing latency across 50,000+ supported songs.
 
 ---
 
@@ -506,10 +431,6 @@ Software Development Engineer II at ViTAA Medical Solutions, with scope spanning
   **Y:** Ran at 60 fps with 98.4% tracking accuracy and ~1 s latency.
   **Z:** OpenCV on mobile devices.
 
-**Added 2026-06-04 (gap-closure):**
-
-- **Real-time / low-latency inference:** Demonstrated real-time computer-vision and audio inference (60 fps object tracking at 98.4% accuracy here; 5 ms speech-scoring latency in Kabo), serving low-latency prediction.
-
 ---
 
 ## Education
@@ -545,15 +466,9 @@ None — all conflicts resolved by the candidate.
 
 ## Items missing a metric (Y)
 
-None — every accomplishment carries a confirmed Y. (The Kubernetes bullet and the two vendor-management bullets added 2026-06-04 were completed with the candidate's figures the same day.)
+None — every accomplishment now has a confirmed Y supplied by the candidate.
 
 ## Notes
 
 - **Sources used:** EMERALD resume (image, file `1643124941564.jpg` / `Austin_Luu_Resume_2019_CS_EMERALD.pdf`), `Austin_Luu_Resume_2022_R.pdf`, `Austin_Luu_Resume_2022_R__1_.pdf`, `Austin_Luu_Resume_2022_P.pdf`, `Austin_Luu_Resume_2022_ManufacturingAerospace.pdf`, `Austin_Luu_Resume_2024_SWE.pdf`, `Austin_Luu_Resume_2024_ML.pdf`, `Austin_Luu_Resume_2025_SWE.pdf`, and the LaTeX sources `education.tex`, `experience.tex`, `skills.tex`, `projects.tex` (the source behind the 2025 SWE resume).
 - **The `.tex` files** match the 2025 SWE resume. Their commented-out (inactive) sections contain alternate phrasings and a few items not in any rendered resume — I did **not** treat commented-out LaTeX as kept accomplishments. Items found only in commented LaTeX that you may want to use: a Research Assistant bullet — "Led literature review and application towards research publication of potential technologies in Aerial Manipulation Systems"; and the project links I did surface above (RUKPOP/Greeco/Vision Motion/Kabo/Drone Swarm).
-
----
-
-## Gap-closure additions (2026-06-04)
-
-Bullets in the **Added 2026-06-04 (gap-closure)** subsections were added from the CV gap analysis against 152 job listings. Several surface keywords by restating accomplishments already documented above (e.g. monitoring 0→100%, dev time 88%) and are intentional duplicates kept so per-job tailoring can select the framing that matches a given JD. The following bullets introduced a metric, tool, or claim **not previously in this CV** and were accepted by the candidate as accurate — re-verify before relying on them: 95% backend response-time (Microservices); UNETR / 17.32% Dice (Embeddings); 8-person Scrum / 20%+ velocity; 5 projects / 30% throughput (Agile); SAM-based RLHF / 5.23% Dice; RAID 100+ items across 2 products; SharePoint 30+ docs; Cursor; SageMaker p95 monitoring; Microsoft Project / 30+ tasks (CIBC); BigQuery / 28% applications / 1000+ / 500+ (TOHacks); $1M product & 10+ stakeholders (ViTAA) and $2M product line & 30+ stakeholders (Celestica); Angular / 3 pages / 38% (August); R / 1 model & 3 reports (Celestica). The chain-of-thought 69→86 and 11-subagent figures originate in the Satellite project.
