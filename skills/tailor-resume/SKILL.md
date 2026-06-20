@@ -179,7 +179,15 @@ Emit a **TailoredResume** object (schema below), plus the bookkeeping fields:
   ],
   "areas_of_expertise": ["flat list of ~9 top skills"],  // the template's 3-column block;
                               // if omitted the renderer derives it from `skills`.
-  "additional_skills": "tools + supporting skills, one line",  // else derived from `skills`
+  "additional_skills": "fallback single line; normally OMIT",  // ADDITIONAL SKILLS now
+                              // renders MULTI-LINE: one paragraph per `skills` group, with
+                              // the "Category:" label bolded (e.g. **Languages:** Python, ...).
+                              // It renders from the grouped `skills` field above, so emit
+                              // `skills` with real categories + items and LEAVE THIS UNSET.
+                              // If you do set this string AND no `skills` groups exist, it
+                              // renders as ONE unlabeled line (back-compat). Grouped `skills`
+                              // take precedence. Whole-line omission only — never reword a
+                              // category or item. Lean tiers drop the whole block (drop_additional).
 
   "_inserted_keywords": ["only keywords you actually added AND that trace to cv.md"],
   "flags": ["missing keyword X omitted — no supporting experience in cv.md", "..."]
@@ -201,15 +209,24 @@ keyword-stuffing** Filter 2 introduced (robotic phrasing, keyword lists masquera
 as sentences). Keep the same TailoredResume schema. Preserve every number and
 keyword's traceability — do not add new numbers or claims here.
 
-**One-page budget — supply a superset, let the packer fit it.** The rendered resume targets a
-single US-Letter page, but **you do not pre-trim to one page** — the renderer's two-phase packer
+**Two-page budget — supply a superset, let the packer fit it.** The rendered resume targets
+two US-Letter pages, but **you do not pre-trim to two pages** — the renderer's two-phase packer
 does the page math (see *Render*). Your job is to supply a **generous, most-relevant-first
 superset** and keep every line honest. Required floors the packer always honors: **at least 3
 experiences and at least 2 projects, and the top (most-relevant) experience carries at least 3
-bullets.** Above those floors, **over-supply**: up to ~5 experiences and ~4 projects, 3 key
-achievements, a full header (up to ~9 `areas_of_expertise`, a `context` line per role, an
-`additional_skills` line). Phase 1 trims the excess to fit one page; Phase 2 grows it back to
-fill the page — so more honest material is better, not worse. The one thing you must do is write
+bullets.** Above those floors, **over-supply on every axis, bullets included**: up to ~7
+experiences and ~6 projects, **~6–8 bullets on the top (most-relevant) role and ~4–6 bullets on
+each other role and project**, 3 key achievements, a full header (up to ~9 `areas_of_expertise`, a
+`context` line per role, an `additional_skills` line). Phase 1 trims the excess to fit two pages;
+Phase 2 grows it back to fill the second page — so more honest material is better, not worse.
+**Bullets are the main fill lever for page 2.** The grow order is experiences → projects → top
+bullets → other bullets, and experiences/projects alone do not reach two pages: if you supply only
+1–3 bullets per role the page stalls around 1.5 and the renderer reports leftover bottom
+whitespace. Page 2 fills only as far as the material you supply: at `--fill-target 0.96` the packer
+aims for a full second page but stops when it runs out of items (it never pads). The renderer's
+hard caps are 8 experiences / 8 projects / 8 top bullets / 6 other bullets — **supply toward
+them**, drawing the most-relevant honest bullets from `cv.md` (which has well more than enough per
+role). The one thing you must do is write
 **tight ~1-line bullets**: the packer caps bullet *counts*, never wording, so a 3-line bullet
 wastes the room it is trying to fill. Keep **every metric verbatim**; never drop, alter, or merge
 metrics, and never combine two accomplishments into one number. Keep each **key achievement to
@@ -221,8 +238,8 @@ metrics, and never combine two accomplishments into one number. Keep each **key 
 > Phase 1 sheds *presentation overhead first* (areas count, per-role `context`, the ADDITIONAL
 > SKILLS line, trailing certs, one key achievement, non-top bullet counts) and only drops below
 > the floors (≥3 experiences, ≥2 projects, top ≥3 bullets) as a last resort; Phase 2 then grows
-> whole items back to fill the page. So **supply a generous superset** (up to ~5 experiences,
-> ~4 projects, ~9 `areas_of_expertise`, a `context` per role, an `additional_skills` line, 3 key
+> whole items back to fill the page. So **supply a generous superset** (up to ~7 experiences,
+> ~6 projects, ~9 `areas_of_expertise`, a `context` per role, an `additional_skills` line, 3 key
 > achievements) and let the renderer choose how much lands. Your job: **tight ~1-line bullets**
 > and content that is **honest and most-relevant-first**; the packer handles the page math
 > against the real (Word) layout without touching wording, metrics, or the floors.
@@ -271,7 +288,8 @@ and layout are preserved:
 python scripts/render_template.py \
   --tailored filter3.json \
   --out "<root>/<date>/{stem}.docx" \
-  --template "<root>/templates/template_0.docx"
+  --template "<root>/templates/template_0.docx" \
+  --max-pages 2 --fill-target 0.96
 ```
 
 This populates the template's sections (Name, Contact, Summary, Areas of
@@ -357,12 +375,15 @@ elsewhere. Force with `RESUME_FIT_BACKEND=word|soffice`. Sanity-check the backen
 with `python scripts/measure_fit.py --file <resume>.docx --diagnose`.
 
 **So Filter 3 should supply a GENEROUS SUPERSET, most-relevant-first — and let the packer choose
-how much fits.** Provide **more than will fit**: up to ~5 experiences and ~4 projects, 3 key
+how much fits.** Provide **more than will fit**: up to ~7 experiences and ~6 projects, **~6–8
+bullets on the top role and ~4–6 on each other role/project**, 3 key
 achievements, up to ~9 `areas_of_expertise`, a `context` line per role, and an `additional_skills`
-line. Phase 1 trims it to one page; Phase 2 grows it back to fill — both against the *real* (Word)
-layout. Still write **tight ~1-line bullets**: the packer caps bullet *counts*, not wording, so
-2–3 line bullets waste the room it is trying to fill and can force a tier below a floor. Generous
-superset + tight bullets = a full one-page resume at whatever tier fits, all floors honored
+line. Phase 1 trims it to two pages; Phase 2 grows it back to fill — both against the *real* (Word)
+layout. Bullets are the main page-2 fill lever: thin per-role bullets (1–3) leave the page short
+even with all experiences/projects present. Still write **tight ~1-line bullets**: the packer caps
+bullet *counts*, not wording, so 2–3 line bullets waste the room it is trying to fill and can force
+a tier below a floor. Generous
+superset + tight bullets = a full resume at whatever tier fits, all floors honored
 (verified: a dense senior CV landed at `lean-areas`, 98.7% full in Word, one page).
 
 If even `last-resort` is over target, the tightest render is left on disk with

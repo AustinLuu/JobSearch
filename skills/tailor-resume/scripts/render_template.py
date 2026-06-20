@@ -37,7 +37,6 @@ from __future__ import annotations
 import argparse
 import copy
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -341,19 +340,7 @@ def fill(tailored: dict, out_path: Path, template_path: Path) -> dict:
     insert_after = Paragraph(skill_paras[0]._p.getprevious(), doc)   # the SECTBREAK empty para
     for p in skill_paras:
         _remove(p)
-    areas = list(tailored.get("areas_of_expertise") or _derive_areas(tailored))
-    # Policy: AREAS OF EXPERTISE shows minimum 6, maximum 9 items. If the tailored
-    # JSON supplies fewer than 6, top up from the skills section (honest selection
-    # among real cv-traceable skills), deduplicated case-insensitively.
-    if len(areas) < 6:
-        seen_lc = {a.strip().lower() for a in areas}
-        for cand in _derive_areas(tailored, limit=99):
-            if len(areas) >= 6:
-                break
-            if cand.strip().lower() not in seen_lc:
-                areas.append(cand)
-                seen_lc.add(cand.strip().lower())
-    areas = areas[:9]
+    areas = tailored.get("areas_of_expertise") or _derive_areas(tailored)
     new_skill_paras = []
     cur = insert_after
     for skill in areas:
@@ -476,62 +463,57 @@ def fill(tailored: dict, out_path: Path, template_path: Path) -> dict:
                           left_bold=True, right_italic=True)
 
     # --- ADDITIONAL SKILLS -----------------------------------------------------
+    # Multi-line: one paragraph per skill category, the "Category:" label bolded.
+    # Renders from the grouped `skills` data (category + items). Falls back to the
+    # explicit `additional_skills` string as a single UNLABELED line only when no
+    # groups exist. Whole-line omission only — categories and items are never
+    # reworded, so integrity is untouched. drop_additional clears both `skills`
+    # and `additional_skills` (apply_budget_tier), so lean tiers still drop the
+    # whole block.
     P = doc.paragraphs
     i_as = _find(P, lambda t: t.startswith("ADDITIONAL SKILLS"))
-    add_text = tailored.get("additional_skills") or _derive_additional(tailored)
-    if not str(add_text).strip():
+    as_paras = [p for p in P[i_as + 1:] if _text(p).strip()]   # existing content line(s)
+
+    groups = []
+    for grp in (tailored.get("skills") or []):
+        items = ", ".join(grp.get("items", []))
+        if items:
+            groups.append((grp.get("category", "").strip(), items))
+    if not groups:
+        add_text = tailored.get("additional_skills") or _derive_additional(tailored)
+        if str(add_text).strip():
+            groups = [("", str(add_text).strip())]   # single unlabeled line (fallback)
+
+    if not groups:
         # nothing to show: remove the heading and its content line so no orphan
         # heading is left at the foot of the page (a fit lever, not a rewrite).
-        heading = P[i_as]
-        add_line = None
-        for p in P[i_as + 1:]:
-            if _text(p).strip():
-                add_line = p
-                break
-        if add_line is None and i_as + 1 < len(P):
-            add_line = P[i_as + 1]
-        if add_line is not None:
-            _remove(add_line)
-        _remove(heading)
+        for p in as_paras:
+            _remove(p)
+        _remove(P[i_as])
     else:
-        add_line = None
-        for p in P[i_as + 1:]:
-            if _text(p).strip():
-                add_line = p
-                break
-        if add_line is None:
-            add_line = P[i_as + 1]
-        _strip_content(add_line)
-        _add_run(add_line, add_text, protos["reg"])
+        # Clone the template's content paragraph once per category so every line
+        # inherits the template's own style/spacing (don't re-theme).
+        if as_paras:
+            proto = copy.deepcopy(as_paras[0]._p)
+            anchor = Paragraph(as_paras[0]._p.getprevious(), doc)
+            for p in as_paras:
+                _remove(p)
+        else:
+            proto = copy.deepcopy(P[i_as + 1]._p)
+            anchor = P[i_as]
+        cur = anchor
+        for cat, items in groups:
+            el = copy.deepcopy(proto)
+            cur._p.addnext(el)
+            np = Paragraph(el, doc)
+            _strip_content(np)
+            if cat:
+                _add_run(np, f"{cat}: ", protos["bold"], bold=True)
+            _add_run(np, items, protos["reg"], bold=False)
+            cur = np
 
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    # --- compact template spacer paragraphs (excess white space fix) ----------
-    # The template keeps a 16pt empty spacer under the name and an empty line under
-    # KEY ACHIEVEMENTS; both read as excessive gaps. Halve/shrink them (env
-    # RESUME_COMPACT_SPACERS=0 restores the original template spacing).
-    if (os.environ.get("RESUME_COMPACT_SPACERS", "1") or "1").strip().lower() not in ("0", "false", "no"):
-        def _mark_sz(p, half_pts):
-            pPr = p._p.get_or_add_pPr()
-            rPr = pPr.find(qn("w:rPr"))
-            if rPr is None:
-                rPr = OxmlElement("w:rPr")
-                pPr.insert(0, rPr)
-            for tag in ("w:sz", "w:szCs"):
-                el = rPr.find(qn(tag))
-                if el is None:
-                    el = OxmlElement(tag)
-                    rPr.append(el)
-                el.set(qn("w:val"), str(half_pts))
-            for r in p.runs:
-                r.font.size = Pt(half_pts / 2)
-        allp = doc.paragraphs
-        if len(allp) > 1 and not _text(allp[1]).strip():
-            _mark_sz(allp[1], 16)      # name spacer: 16pt -> 8pt
-        k2 = _find(allp, lambda t: t.startswith("KEY ACHIEVEMENTS"))
-        if k2 is not None and k2 + 1 < len(allp) and not _text(allp[k2 + 1]).strip():
-            _mark_sz(allp[k2 + 1], 10)  # KEY ACHIEVEMENTS spacer -> 5pt
-
     doc.save(str(out_path))
     return {"out": str(out_path),
             "ats_flags": ["Skills render in a 3-column section (template design, user-approved). "
@@ -865,13 +847,13 @@ BUDGET_LADDER = [
     BudgetTier("full",         key_achievements=3, max_experiences=3, top_bullets=4, other_bullets=2, max_projects=2, min_scale=0.92, areas_cap=9, drop_context=False, drop_additional=False, max_certifications=99),
     BudgetTier("lean-context", key_achievements=3, max_experiences=3, top_bullets=4, other_bullets=2, max_projects=2, min_scale=0.90, areas_cap=8, drop_context=True,  drop_additional=False, max_certifications=99),
     BudgetTier("lean-ka",      key_achievements=2, max_experiences=3, top_bullets=4, other_bullets=2, max_projects=2, min_scale=0.90, areas_cap=6, drop_context=True,  drop_additional=False, max_certifications=2),
-    BudgetTier("lean-areas",   key_achievements=2, max_experiences=3, top_bullets=3, other_bullets=2, max_projects=2, min_scale=0.88, areas_cap=6, drop_context=True,  drop_additional=True,  max_certifications=1),
-    BudgetTier("lean-bullets", key_achievements=2, max_experiences=3, top_bullets=3, other_bullets=1, max_projects=2, min_scale=0.86, areas_cap=6, drop_context=True,  drop_additional=True,  max_certifications=1),
-    BudgetTier("lean-max",     key_achievements=2, max_experiences=3, top_bullets=3, other_bullets=1, max_projects=2, min_scale=0.84, areas_cap=6, drop_context=True,  drop_additional=True,  max_certifications=1),
+    BudgetTier("lean-areas",   key_achievements=2, max_experiences=3, top_bullets=3, other_bullets=2, max_projects=2, min_scale=0.88, areas_cap=5, drop_context=True,  drop_additional=True,  max_certifications=1),
+    BudgetTier("lean-bullets", key_achievements=2, max_experiences=3, top_bullets=3, other_bullets=1, max_projects=2, min_scale=0.86, areas_cap=4, drop_context=True,  drop_additional=True,  max_certifications=1),
+    BudgetTier("lean-max",     key_achievements=2, max_experiences=3, top_bullets=3, other_bullets=1, max_projects=2, min_scale=0.84, areas_cap=3, drop_context=True,  drop_additional=True,  max_certifications=1),
     # --- below here, content floors are broken only because a lean header still overflows ---
-    BudgetTier("one-project",  key_achievements=2, max_experiences=3, top_bullets=3, other_bullets=1, max_projects=1, min_scale=0.84, areas_cap=6, drop_context=True,  drop_additional=True,  max_certifications=1),
-    BudgetTier("hard-bullets", key_achievements=2, max_experiences=3, top_bullets=2, other_bullets=1, max_projects=1, min_scale=0.82, areas_cap=6, drop_context=True,  drop_additional=True,  max_certifications=1),
-    BudgetTier("last-resort",  key_achievements=2, max_experiences=2, top_bullets=2, other_bullets=1, max_projects=1, min_scale=0.80, areas_cap=6, drop_context=True,  drop_additional=True,  max_certifications=1),
+    BudgetTier("one-project",  key_achievements=2, max_experiences=3, top_bullets=3, other_bullets=1, max_projects=1, min_scale=0.84, areas_cap=3, drop_context=True,  drop_additional=True,  max_certifications=1),
+    BudgetTier("hard-bullets", key_achievements=2, max_experiences=3, top_bullets=2, other_bullets=1, max_projects=1, min_scale=0.82, areas_cap=3, drop_context=True,  drop_additional=True,  max_certifications=1),
+    BudgetTier("last-resort",  key_achievements=2, max_experiences=2, top_bullets=2, other_bullets=1, max_projects=1, min_scale=0.80, areas_cap=3, drop_context=True,  drop_additional=True,  max_certifications=1),
 ]
 
 
@@ -978,42 +960,13 @@ def render_fit_template(tailored: dict, out_path: Path, template_path: Path,
             "projects": len(tailored.get("projects") or [])}
     attempts: list[dict] = []
 
-    # LibreOffice lays this template out ~1in taller than Word (the authoritative
-    # backend the candidate opens the file in). Uncalibrated, the packer over-trims
-    # on the headless path and the real Word page ends up with bottom white space.
-    # Calibration: when measuring with soffice, content spilling at most
-    # RESUME_SOFFICE_SPILL_IN inches (default 1.1) onto page max_pages+1 is
-    # counted as fitting max_pages, and the page is treated as 100% full.
-    # Default 1.1in: calibrated empirically against real Word — a soffice spill of
-    # ~1.29in was 1 line over in Word; ~1.86in was ~3 lines over; <=1.1in fits.
-    spill_allow_pt = float(os.environ.get("RESUME_SOFFICE_SPILL_IN", "1.1") or 1.1) * 72.0
-    last_m = {}  # measurement of the most recent render on disk
-
-    def _eff_pages(path):
-        m = measure_fit.measure_cached(str(path)) or {}
-        m = dict(m)
-        p = m.get("pages")
-        if (p is not None and m.get("backend") == "soffice" and p == max_pages + 1
-                and m.get("last_y_pt") is not None and m["last_y_pt"] <= spill_allow_pt):
-            m.update({"pages_raw": p, "pages": max_pages,
-                      "soffice_spill_in": round(m["last_y_pt"] / 72.0, 2),
-                      "fill_ratio": 1.0, "whitespace_pt": 0.0, "whitespace_in": 0.0})
-            p = max_pages
-        last_m.clear()
-        last_m.update(m)
-        return p
-
-    def _last_fill():
-        return {k: last_m[k] for k in ("fill_ratio", "whitespace_pt", "whitespace_in",
-                                       "soffice_spill_in") if k in last_m}
-
     def _render(tier):
         """Fill + tighten + measure `tier` onto out_path. Returns (status, pages, trimmed)."""
         trimmed = apply_budget_tier(tailored, tier)
         status = fill(trimmed, out_path, template_path)
         if not no_tighten:
             status["tighten"] = tighten_wrapped_lines(out_path, min_scale=tier.min_scale)
-        return status, _eff_pages(out_path), trimmed
+        return status, measure_fit.pages(out_path), trimmed
 
     def _trim_note(trimmed):
         kept = {"key_achievements": len(trimmed.get("key_achievements") or []),
@@ -1022,15 +975,8 @@ def render_fit_template(tailored: dict, out_path: Path, template_path: Path,
         return {k: f"{base[k]}->{kept[k]}" for k in base if kept[k] != base[k]}
 
     # ----- PHASE 1: shrink header (then floors) until it fits -----
-    # Binary search the ladder for the richest tier that fits. Page count is
-    # monotonic along the ladder (each leaner tier strictly removes whole items),
-    # so bisection finds the same tier the old richest-first walk did in ~log2(N)
-    # renders instead of N — needed to fit sandbox execution windows.
     win = None  # (tier, status, pages, trimmed)
-    lo, hi = 0, len(BUDGET_LADDER) - 1
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        tier = BUDGET_LADDER[mid]
+    for tier in BUDGET_LADDER:
         status, pages, trimmed = _render(tier)
         if pages is None:
             # Can't measure -> don't trim blindly. Render the FULL budget and flag.
@@ -1044,13 +990,7 @@ def render_fit_template(tailored: dict, out_path: Path, template_path: Path,
         attempts.append({"tier": tier.name, "pages": pages, "trimmed": _trim_note(trimmed) or "none"})
         if pages <= max_pages:
             win = (tier, status, pages, trimmed)
-            hi = mid - 1          # a richer tier might also fit
-        else:
-            lo = mid + 1          # too rich; go leaner
-    if win is not None and win[0].name != (attempts[-1]["tier"] if attempts else ""):
-        # ensure the winning tier's render is the one on disk before Phase 2
-        status, pages, trimmed = _render(win[0])
-        win = (win[0], status, pages, trimmed)
+            break
 
     if win is None:
         # Even the tightest tier overflows. Leave the tightest render on disk + flag.
@@ -1068,12 +1008,13 @@ def render_fit_template(tailored: dict, out_path: Path, template_path: Path,
         return status
 
     win_tier, win_status, win_pages, win_trimmed = win
-    win_fill = _last_fill()                      # baseline (Phase 1) render is on disk
+    win_fill = measure_fit.fill(out_path)        # baseline (Phase 1) render is on disk
 
     # ----- PHASE 2: greedily grow content under the winning header to fill -----
-    eff_target = 1.0 if last_m.get("backend") == "soffice" else fill_target
-    under_filled = (not win_fill) or win_fill.get("fill_ratio", 1.0) < eff_target
-    if (not no_grow) and under_filled:
+    floors_ok = (win_tier.max_experiences >= 3 and win_tier.max_projects >= 2
+                 and win_tier.top_bullets >= 3)
+    under_filled = (not win_fill) or win_fill.get("fill_ratio", 1.0) < fill_target
+    if (not no_grow) and floors_ok and under_filled:
         base_tier = win_tier
         base_name = win_tier.name
         base_content = [base_tier.max_experiences, base_tier.top_bullets,
@@ -1081,7 +1022,7 @@ def render_fit_template(tailored: dict, out_path: Path, template_path: Path,
         cur = list(base_content)
         good = list(base_content)        # content of the last FITTING render
         ops = _grow_ops()
-        budget = int(os.environ.get("RESUME_GROW_BUDGET", "8") or 8)  # bound the render count
+        budget = 16                      # bound the render count
         i = 0
         while i < len(ops) and budget > 0:
             d = ops[i]
@@ -1109,7 +1050,7 @@ def render_fit_template(tailored: dict, out_path: Path, template_path: Path,
                           other_bullets=good[2], max_projects=good[3])
         win_status, win_pages, win_trimmed = _render(commit)
         win_tier = commit
-        win_fill = _last_fill()
+        win_fill = measure_fit.fill(out_path)
 
     win_status.update({
         "pages": win_pages, "fit_ok": True, "tier": win_tier.name,
